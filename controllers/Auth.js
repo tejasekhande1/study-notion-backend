@@ -40,12 +40,13 @@ exports.sendOTP = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "OTP Send Successfully",
-      otp,
+      data: otp,
     });
-  } catch (e) {
-    return res.status(401).json({
+  } catch (error) {
+    return res.status(500).json({
       success: false,
-      message: `Error while sending OTP : ${e.message}`,
+      message: `Error while sending OTP : ${error.message}`,
+      error: error,
     });
   }
 };
@@ -120,12 +121,13 @@ exports.signUp = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "User registered successfully",
-      user,
+      data: user,
     });
-  } catch (e) {
-    return res.status(400).json({
+  } catch (error) {
+    return res.status(500).json({
       success: false,
-      message: `Error while registering user : ${e.message}`,
+      message: `Error while registering user : ${error.message}`,
+      error: error,
     });
   }
 };
@@ -177,10 +179,11 @@ exports.login = async (req, res) => {
         message: "Please enter correct password",
       });
     }
-  } catch (e) {
+  } catch (error) {
     return res.status(400).json({
       success: false,
-      message: `Error while loging user : ${e.message}`,
+      message: `Error while loging user : ${error.message}`,
+      error: error,
     });
   }
 };
@@ -228,10 +231,11 @@ exports.changePassword = async (req, res) => {
       success: true,
       message: "Password changed successfully.",
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `Error while changing password: ${e.message}`,
+      message: `Error while changing password: ${error.message}`,
+      error: error,
     });
   }
 };

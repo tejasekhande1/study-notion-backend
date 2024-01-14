@@ -18,12 +18,13 @@ exports.createTag = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "Tag created successfully",
-      tagDetails,
+      data: tagDetails,
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       status: false,
       message: "Error while creating tag",
+      error: error,
     });
   }
 };
@@ -34,12 +35,13 @@ exports.getAllTags = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "All tags are fetched",
-      allTags,
+      data: allTags,
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       status: false,
       message: "Error while fetching tags",
+      error: error,
     });
   }
 };

@@ -9,7 +9,7 @@ exports.resetPasswordToken = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
-      return res.status(401).json({
+      return res.status(404).json({
         status: false,
         message: "User not found",
       });
@@ -34,10 +34,11 @@ exports.resetPasswordToken = async (req, res) => {
       success: true,
       message: "Please check your email and change password",
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Error while sending url on email",
+      error: error,
     });
   }
 };
@@ -82,10 +83,11 @@ exports.resetPassword = async (req, res) => {
       status: true,
       message: "Reset Password Successfully",
     });
-  } catch (e) {
+  } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Error while reset password",
+      error: error,
     });
   }
 };
