@@ -25,8 +25,9 @@ async function sendEmail(email, otp) {
   }
 }
 
-OTPSchema.pre('save', async function(next){
-    await sendEmail(this.email,this.otp)
-})
+OTPSchema.pre("save", async function (next) {
+  await sendEmail(this.email, this.otp);
+  next();
+});
 
 module.exports = mongoose.model("OTP", OTPSchema);
