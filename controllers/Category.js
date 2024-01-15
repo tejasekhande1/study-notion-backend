@@ -48,3 +48,37 @@ exports.getAllCategories = async (req, res) => {
     });
   }
 };
+
+exports.categoryPageDetails = async (req, res) => {
+  try {
+    const { categoryId } = req.body;
+    const selectedCategory = await Category.findById({ _id: categoryId })
+      .populate("courses")
+      .exec();
+
+    if (!selectedCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Data Not Found",
+      });
+    }
+
+    const differentCategories = await Category.find({
+      _id: { $ne: categoryId },
+    })
+      .populate("courses")
+      .exec();
+
+    return res.status(200).json({
+      status: true,
+      message: "Success,fetching categories page details",
+      data: { selectedCategory, differentCategories },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Error while fetching categories page details",
+      error: error,
+    });
+  }
+};

@@ -123,9 +123,22 @@ exports.getCourseDetails = async (req, res) => {
       });
     }
 
-    const courseDetails = await Course.findById(courseId).populate(
-      "instructor"
-    );
+    const courseDetails = await Course.findById({ _id: courseId })
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate("category")
+      .populate("ratingAndReview")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .exec();
 
     if (!courseDetails) {
       return res.status(404).json({
