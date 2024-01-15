@@ -111,3 +111,39 @@ exports.getAllCourses = async (req, res) => {
     });
   }
 };
+
+exports.getCourseDetails = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Course ID is required",
+      });
+    }
+
+    const courseDetails = await Course.findById(courseId).populate(
+      "instructor"
+    );
+
+    if (!courseDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course details retrieved successfully",
+      data: courseDetails,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error occurred while fetching course details",
+      error: error,
+    });
+  }
+};
