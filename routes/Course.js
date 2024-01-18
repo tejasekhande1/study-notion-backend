@@ -52,7 +52,7 @@ router.post("/createCategory", auth, isAdmin, createCategory);
 router.get("/getAllCategories", getAllCategories);
 router.post("/getCategoryPageDetails", categoryPageDetails);
 
-router.post("/createRating", auth, isStudent, createRating);
+router.post("/createRatingAndReview", auth, isStudent, createRatingAndReview);
 router.get("/getAverageRating", getAverageRating);
 router.get("/getReviews", getAllRatingAndReviews);
 

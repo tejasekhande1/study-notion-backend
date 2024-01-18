@@ -8,8 +8,8 @@ require("dotenv").config();
 
 exports.sendOTP = async (req, res) => {
   try {
-    const email = req.body;
-    const checkedUserExist = User.findOne({ email });
+    const { email } = req.body;
+    const checkedUserExist = await User.findOne({ email });
     if (checkedUserExist) {
       return res.status(401).json({
         success: false,
@@ -23,7 +23,7 @@ exports.sendOTP = async (req, res) => {
       specialChars: false,
     });
 
-    var result = await OTP.findOne({ otp: otp });
+    var result = await OTP.findOne({ otp });
 
     while (result) {
       otp = OTPGenerator.generate(6, {
@@ -34,7 +34,7 @@ exports.sendOTP = async (req, res) => {
       result = await OTP.findOne({ otp: otp });
     }
 
-    const OTPPayload = { email, otp };
+    const OTPPayload = { email: email, otp: otp };
     await OTP.create(OTPPayload);
 
     return res.status(200).json({
@@ -97,14 +97,14 @@ exports.signUp = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(1);
 
-    if (recentOTP.length === 0 || recentOTP !== otp) {
+    if (recentOTP.length === 0 || recentOTP[0].otp !== otp) {
       return res.status(400).json({
         success: false,
         message: `Error in validating otp`,
       });
     }
 
-    const hashedPassword = bcrypt.hash(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const profile = await Profile.create({
       gender: null,
@@ -147,7 +147,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -169,10 +169,11 @@ exports.login = async (req, res) => {
       user.password = undefined;
 
       const options = {
-        expires: Date.now() + 3 * 24 * 60 * 60 * 100,
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
       };
 
-      return res.cookies("token", token, options).status(200).json({
+      return res.cookie("token", token, options).status(200).json({
         success: true,
         token,
         user,

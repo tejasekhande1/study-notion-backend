@@ -5,7 +5,10 @@ const User = require("../models/User");
 exports.auth = async (req, res, next) => {
   try {
     const token =
-      req.cookies || req.header("Authorizattion").replace("Bearer ", "");
+      req.cookies.token ||
+      (req.headers.authorization &&
+        req.headers.authorization.replace("Bearer ", ""));
+
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -13,16 +16,15 @@ exports.auth = async (req, res, next) => {
       });
     }
     try {
-      const decode = jwt.verify(token, process.env.SECRET_KEY);
-      req.user = decode;
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.user = decoded;
+      next(); 
     } catch (e) {
       return res.status(401).json({
         success: false,
-        message: "Error in token",
+        message: "Error in token verification",
       });
     }
-
-    next();
   } catch (e) {
     return res.status(401).json({
       success: false,
