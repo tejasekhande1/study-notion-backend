@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const {uploadToCloudinary} = require('../utils/imageUploader')
 
 exports.updateProfile = async (req, res) => {
   try {
@@ -90,7 +91,7 @@ exports.deleteAccount = async (req, res) => {
 
 exports.getUserDetails = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const userDetails = await User.findById(userId)
       .populate("additionalDetails")
@@ -121,7 +122,7 @@ exports.updateDisplayPicture = async (req, res) => {
   try {
     const displayPicture = req.files.displayPicture;
     const userId = req.user.id;
-    const image = await uploadImageToCloudinary(
+    const image = await uploadToCloudinary(
       displayPicture,
       process.env.FOLDER,
       1000,
