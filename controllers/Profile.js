@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Profile = require("../models/Profile");
-const {uploadToCloudinary} = require('../utils/imageUploader')
+const { uploadToCloudinary } = require('../utils/imageUploader')
 
 exports.updateProfile = async (req, res) => {
   try {
@@ -61,8 +61,11 @@ exports.updateProfile = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
   try {
-    const userId = req.user._id;
+    console.log("Req -> ", req.user);
+    const userId = req.user.id;
+    console.log("user id -> ", userId);
     const deletedUser = await User.findByIdAndDelete({ _id: userId });
+    console.log("Deleted User -> ", deletedUser);
 
     if (!deletedUser) {
       return res.status(404).json({
@@ -92,6 +95,8 @@ exports.deleteAccount = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
   try {
     const userId = req.user.id;
+
+    console.log("Req -> ",req.user);
 
     const userDetails = await User.findById(userId)
       .populate("additionalDetails")

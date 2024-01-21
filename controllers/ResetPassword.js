@@ -1,11 +1,11 @@
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto')
 
 exports.resetPasswordToken = async (req, res) => {
   try {
     const { email } = req.body;
-
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
@@ -16,6 +16,7 @@ exports.resetPasswordToken = async (req, res) => {
     }
 
     const token = crypto.randomUUID();
+
     const updatedUser = await User.findOneAndUpdate(
       { email },
       { token: token, resetPasswordExpires: Date.now() + 5 * 60 * 1000 },

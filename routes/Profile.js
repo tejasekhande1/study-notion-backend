@@ -9,7 +9,7 @@ const {
   getEnrolledCourses,
 } = require("../controllers/Profile");
 
-router.delete("/deleteProfile", deleteAccount);
+router.delete("/deleteProfile", auth, deleteAccount);
 router.put("/updateProfile", auth, updateProfile);
 router.get("/getUserDetails", auth, getUserDetails);
 router.get("/getEnrolledCourses", auth, getEnrolledCourses);
