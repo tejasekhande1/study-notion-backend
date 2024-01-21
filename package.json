@@ -23,5 +23,8 @@
     "otp-generator": "^4.0.1",
     "razorpay": "^2.9.2"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }
